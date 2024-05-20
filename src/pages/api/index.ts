@@ -78,20 +78,13 @@ export const post: APIRoute = async context => {
     const body = await context.request.json()
     const {
       messages,
-      key = localKey,
       temperature = 0.6,
-      password,
-      model,
-      stop = undefined
+      password
     } = body as {
       messages?: ChatMessage[]
-      key?: string
       temperature?: number
       password?: string
-      model?: string
-      stop?: string
     }
-
     if (pwdFile) {
       if (!password) {
         return new Response("请在输入框左上角设置里填写密码。")
@@ -110,23 +103,7 @@ export const post: APIRoute = async context => {
 
     if (!messages?.length) {
       return new Response("没有输入任何文字。")
-    } else {
-      const content = messages.at(-1)!.content.trim()
-      if (content.startsWith("查询填写的 Key 的余额")) {
-        if (key !== localKey) {
-          return new Response(await genBillingsTable(splitKeys(key)))
-        } else {
-          return new Response("没有填写 OpenAI API key，不会查询内置的 Key。")
-        }
-      } else if (content.startsWith("sk-")) {
-        return new Response(await genBillingsTable(splitKeys(content)))
-      }
     }
-
-    const apiKey = randomKeyWithBalance(splitKeys(key))
-
-    if (!apiKey)
-      return new Response("没有填写 OpenAI API key，或者 key 填写错误。")
 
     const tokens = messages.reduce((acc, cur) => {
       const tokens = tokenizer.encode(cur.content).bpe.length
@@ -152,17 +129,15 @@ export const post: APIRoute = async context => {
       },
       method: "POST",
       body: JSON.stringify({
-        model: model || "gpt-3.5-turbo",
+        model: "gpt-4o",
         messages,
         temperature,
-        stop,
-        // max_tokens: 4096 - tokens,
         stream: true
       })
     })
-
-    var get = false
-
+    
+    let get = false
+    
     const stream = new ReadableStream({
       async start(controller) {
         const streamParser = (event: ParsedEvent | ReconnectInterval) => {
@@ -200,42 +175,3 @@ export const post: APIRoute = async context => {
   }
 }
 
-export async function fetchBilling(key: string) {
-  return (await fetch(`https://${baseURL}/dashboard/billing/credit_grants`, {
-    agent: proxy ? new SocksProxyAgent(proxy) : undefined,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${key}`
-    }
-  }).then(res => res.json())) as {
-    total_granted: number
-    total_used: number
-    total_available: number
-  }
-}
-
-export async function genBillingsTable(keys: string[]) {
-  const res = await Promise.all(keys.map(k => fetchBilling(k)))
-  const table = res
-    .map(
-      (k, i) =>
-        `| ${keys[i].slice(0, 8)} | ${k.total_available.toFixed(4)}(${(
-          (k.total_available / k.total_granted) *
-          100
-        ).toFixed(1)}%) | ${k.total_used.toFixed(4)} | ${k.total_granted} |`
-    )
-    .join("\n")
-
-  return `| Key  | 剩余 | 已用 | 总额度 |
-| ---- | ---- | ---- | ------ |
-${table}
-`
-}
-
-async function randomKeyWithBalance(keys: string[]) {
-  if (process.env.EDGE_CONFIG) {
-    const map = await getAll()
-    const weights = keys.map(k => map[k] || 5) as number[]
-    return randomWithWeight(keys, weights)
-  } else return randomKey(keys)
-}
