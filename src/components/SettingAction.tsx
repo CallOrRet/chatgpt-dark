@@ -31,19 +31,6 @@ export default function SettingAction(props: {
             }}
           />
         </SettingItem>
-        <SettingItem icon="i-carbon:api" label="OpenAI API Key">
-          <input
-            type="password"
-            value={props.setting().openaiAPIKey}
-            class="max-w-150px ml-1em px-1 text-slate-7 dark:text-slate bg-slate bg-op-15 focus:bg-op-20 focus:ring-0 focus:outline-none"
-            onInput={e => {
-              props.setSetting({
-                ...props.setting(),
-                openaiAPIKey: (e.target as HTMLInputElement).value
-              })
-            }}
-          />
-        </SettingItem>
         <SettingItem icon="i-carbon:user-online" label="系统角色指令">
           <input
             type="text"
@@ -73,23 +60,6 @@ export default function SettingAction(props: {
               })
             }}
           />
-        </SettingItem>
-        <SettingItem icon="i-carbon:cut-in-half" label="OpenAI模型">
-          <select
-            name="models"
-            id="pet-select"
-            class="max-w-150px w-full bg-slate bg-op-15 appearance-none accent-slate text-center"
-            value={props.setting().model}
-            onChange={e => {
-              props.setSetting({
-                ...props.setting(),
-                model: (e.target as HTMLSelectElement).value
-              })
-            }}
-          >
-            <option value="gpt-3.5-turbo">GPT3.5</option>
-            <option value="gpt-4">GPT4</option>
-          </select>
         </SettingItem>
         <SettingItem
           icon="i-carbon:save-image"
