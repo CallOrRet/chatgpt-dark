@@ -49,7 +49,6 @@
 {
   "continuousDialogue": true, // 开启连续对话，每次都需要将上下文传给 API，比较费钱，而且同样有 4096 token 的限制
   "archiveSession": false, // 记录对话内容，刷新后不会清空对话
-  "openaiAPIKey": "", // 默认填写的 key，不需要填写，否则其他人看得到。
   "password": "",// 默认填写的密码，不需要填写，否则其他人看得到。
   "openaiAPITemperature": 60, // 0-100 越高 ChatGPT 思维就越发散，开始乱答
   "systemRule": "" // 系统角色指令，会在每次提问时添加。主要用于对 ChatGPT 的语气，口头禅这些进行定制。
