@@ -24,7 +24,7 @@
 | ---------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------|
 | `OPENAI_API_KEY`                   | OpenAI API Key                                               | 无                                                          |
 | `DEFAULT_MESSAGE`                  | 默认提示信息                                                    | - 由 [OpenAI API](https://platform.openai.com/docs/guides/chat) 提供支持。<br/>- 由 [@CallOrRet](https://github.com/CallOrRet) 基于 [chatgpt-vercel](https://github.com/ourongxing/chatgpt-vercel) 开发，查看 [源码](https://github.com/CallOrRet/chatgpt-dark)，欢迎自部署。<br/>- [[Shift]] + [[Enter]] 换行。只输入 [[/]] 可展开Prompt预设。只输入 [[空格]] 可选择切换到不同对话历史，点击输入框滚动到底部。<br/>- 为了节省GPT请求Token消耗，默认关闭了连续对话，若需要可在输入框左上角的设置里自行开启，也可开启记录对话内容，来新建和记录不同对话历史。|
-| `DEFAULT_SETTING`                  | 默认设置 | {<br/>  "continuousDialogue": true,<br/>  "archiveSession": false,<br/>  "openaiAPIKey": "",<br />  "openaiAPITemperature": 60,<br/>  "systemRule": ""<br/>  "password": ""<br />} |
+| `DEFAULT_SETTING`                  | 默认设置 | {<br/>  "continuousDialogue": true,<br/>  "archiveSession": false,<br/>  "openaiAPITemperature": 60,<br/>  "systemRule": ""<br/>  "password": ""<br />} |
 | `RESET_CONTINUOUS_DIALOGUE_OPTION` | 刷新时重置 `开启连续对话` 选项，在分享给很多人用的时候可以有效避免大量消耗。 | false                                                        |
 | `OPENAI_API_BASE_URL`              | 本地开发时可以填写 OpenAI 的代理服务器，但是 Vercel 不需要。            | api.openai.com                                               |
 | `PASSWORD`                         | 网站密码                                                         | 无                                                           |
