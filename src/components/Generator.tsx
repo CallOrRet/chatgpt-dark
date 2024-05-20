@@ -257,18 +257,20 @@ async function fetchGPT(inputValue: string) {
   const systemRule = setting().systemRule.trim()
   const message = {
     role: "user",
-    content: systemRule ? systemRule + "\n" + inputValue : inputValue
+    content: inputValue
+  }
+  let messages = setting().continuousDialogue
+      ? [...messageList().slice(0, -1), message]
+      : [message]
+  if (systemRule.length > 1) {
+     messages = [{role: "system", content: systemRule}, ...messages]
   }
   const response = await fetch("/api", {
     method: "POST",
     body: JSON.stringify({
-      messages: setting().continuousDialogue
-      ? [...messageList().slice(0, -1), message]
-      : [message],
-      key: setting().openaiAPIKey || undefined,
+      messages: messages,
       temperature: setting().openaiAPITemperature / 100,
       password: setting().password,
-      model: setting().model
     }),
     signal: controller.signal
   })
